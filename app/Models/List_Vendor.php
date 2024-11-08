@@ -9,6 +9,7 @@ class List_Vendor extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'id_vendor';
     protected $fillable = [
         'nama_vendor',
         'alamat_vendor',

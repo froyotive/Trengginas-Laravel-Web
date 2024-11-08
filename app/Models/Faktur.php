@@ -9,6 +9,7 @@ class Faktur extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'id_faktur';
     protected $fillable = [
         'no_spk',
         'tgl_sk',

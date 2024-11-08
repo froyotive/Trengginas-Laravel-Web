@@ -16,15 +16,21 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class FakturResource extends Resource
 {
     protected static ?string $model = Faktur::class;
+    protected static ?string $navigationIcon = 'heroicon-o-document';
+    
+    protected static ?string $navigationLabel = 'Faktur';
+    
+    protected static ?string $modelLabel = 'Faktur';
+    protected static ?string $pluralModelLabel = 'Faktur';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?int $navigationSort = 1;
+
+    protected static ?string $navigationGroup = 'Manajemen Faktur';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('no_faktur')->label('No Faktur'),
-                
                 Forms\Components\TextInput::make('no_spk')->label('No. SPK'),
                 Forms\Components\DatePicker::make('tgl_sk')->label('Tanggal'),
                 Forms\Components\TextInput::make('user')->label('User'),
@@ -35,7 +41,7 @@ class FakturResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('no_spk')->label('No. SPK'),
             ])
             ->filters([
                 //

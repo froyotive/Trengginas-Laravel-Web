@@ -16,8 +16,16 @@ class IsiFakturResource extends Resource
 {
     protected static ?string $model = Isi_Faktur::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
+    
+    protected static ?string $navigationLabel = 'Isi Faktur';
+    
+    protected static ?string $modelLabel = 'Isi Faktur';
+    protected static ?string $pluralModelLabel = 'Isi Faktur';
+    
+    
+    protected static ?string $navigationGroup = 'Manajemen Faktur';
+    protected static ?int $navigationSort = 2;
     public static function form(Form $form): Form
     {
         return $form

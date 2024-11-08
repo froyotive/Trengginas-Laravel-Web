@@ -17,8 +17,16 @@ use App\Models\List_Vendor;
 class ListVendorResource extends Resource
 {
     protected static ?string $model = List_Vendor::class;
+    protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
+    
+    protected static ?string $navigationLabel = 'List Vendor';
+    
+    protected static ?string $modelLabel = 'Vendor';
+    protected static ?string $pluralModelLabel = 'Vendor';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?int $navigationSort = 3;
+
+    protected static ?string $navigationGroup = 'Manajemen Faktur';
 
     public static function form(Form $form): Form
     {
@@ -34,7 +42,7 @@ class ListVendorResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('nama_vendor')->label('Nama Vendor'),
             ])
             ->filters([
                 //

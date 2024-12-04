@@ -16,6 +16,10 @@ return new class extends Migration
             $table->string('no_spk')->unique();
             $table->date('tgl_sk');
             $table->string('user');
+            $table->date('tgl_bast_vendor')->nullable();
+            $table->date('deadline_pekerjaan');
+            $table->string('spk_tj_ke_vendor');
+            $table->string('nomor_folder_pekerjaan');
             $table->timestamps();
         });
     }

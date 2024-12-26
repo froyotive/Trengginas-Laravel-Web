@@ -43,10 +43,10 @@ class FakturResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('spk_tj_ke_vendor')
                     ->label('SPK TJ ke Vendor')
-                    ->required(),
+                    ->nullable(),
                 Forms\Components\TextInput::make('nomor_folder_pekerjaan')
                     ->label('Nomor Folder Pekerjaan')
-                    ->required(),
+                    ->nullable(),
             ]);
     }
 
@@ -58,54 +58,71 @@ class FakturResource extends Resource
                     ->label('No. SPK')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('tgl_sk')
-                    ->label('Tanggal SPK')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('user')
-                    ->label('SPK User')
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('tgl_bast_vendor')
-                    ->label('Tanggal BAST Vendor')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('deadline_pekerjaan')
-                    ->label('Deadline Pekerjaan')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('spk_tj_ke_vendor')
-                    ->label('SPK TJ ke Vendor')
-                    ->sortable()
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('nomor_folder_pekerjaan')
                     ->label('Nomor Folder Pekerjaan')
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('user')
+                    ->label('SPK User')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('deadline_pekerjaan')
+                    ->label('Deadline')
+                    ->date()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('countdown')
                     ->label('Countdown')
                     ->getStateUsing(function (Model $record) {
                         $deadline = Carbon::parse($record->deadline_pekerjaan);
                         $now = Carbon::now();
-                        return $deadline->diffInDays($now) . ' days remaining';
-                    }),
+
+                        if ($now->gt($deadline)) {
+                            return 'Telah Lewat Batas';
+                        }
+
+                        $diff = $now->diff($deadline);
+                        $parts = [];
+
+                        if ($diff->y > 0) {
+                            $parts[] = $diff->y . ' tahun';
+                        }
+                        if ($diff->m > 0) {
+                            $parts[] = $diff->m . ' bulan';
+                        }
+                        if ($diff->d > 0) {
+                            $parts[] = $diff->d . ' hari';
+                        }
+                        if (empty($parts)) {
+                            if ($diff->h > 0) {
+                                $parts[] = $diff->h . ' jam';
+                            }
+                            if ($diff->i > 0) {
+                                $parts[] = $diff->i . ' menit';
+                            }
+                        }
+
+                        return implode(' ', $parts) . ' lagi';
+                    })
+                    ->alignCenter(),
             ])
-            ->filters([
-                //
-            ])
+            ->defaultSort('created_at', 'desc')
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->button()
+                    ->label('Baca')
+                    ->color('info'),
+                Tables\Actions\DeleteAction::make()
+                    ->button()
+                    ->label('Hapus')
+                    ->color('danger')
             ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
-            ]);
+            ->bulkActions([]);
     }
 
     public static function getRelations(): array
     {
         return [
-            //
+            // Define your relations here
         ];
     }
 

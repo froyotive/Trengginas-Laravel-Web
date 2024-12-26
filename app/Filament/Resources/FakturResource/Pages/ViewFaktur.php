@@ -4,6 +4,7 @@ namespace App\Filament\Resources\FakturResource\Pages;
 
 use App\Filament\Resources\FakturResource;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Actions;
 use Carbon\Carbon;
 
 class ViewFaktur extends ViewRecord
@@ -14,6 +15,19 @@ class ViewFaktur extends ViewRecord
     {
         return [
             \App\Filament\Resources\FakturResource\Widgets\CountdownWidget::class,
+        ];
+    }
+
+    protected function getActions(): array
+    {
+        return [
+            Actions\Action::make('back')
+                ->label('Kembali ke halaman utama')
+                ->url(FakturResource::getUrl('index'))
+                ->color('info'),
+            Actions\EditAction::make('edit')
+                ->label('Ubah data')
+                ->color('warning'),
         ];
     }
 }

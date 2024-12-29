@@ -5,6 +5,7 @@ namespace App\Filament\Resources\FakturResource\Pages;
 use App\Filament\Resources\FakturResource;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Pages\Actions;
+use Filament\Notifications\Notification;
 
 class EditFaktur extends EditRecord
 {
@@ -12,11 +13,14 @@ class EditFaktur extends EditRecord
 
     protected function getActions(): array
     {
-        return [
-            Actions\ButtonAction::make('save')
-                ->label('Simpan')
-                ->color('warning')
-                ->action('save'),
-        ];
+        return [];
+    }
+
+    protected function afterSave(): void
+    {
+        Notification::make()
+            ->title('Berhasil Mengubah Isi Faktur')
+            ->success()
+            ->send();
     }
 }

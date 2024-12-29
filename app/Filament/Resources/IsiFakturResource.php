@@ -34,52 +34,78 @@ class IsiFakturResource extends Resource
                             ->options(Faktur::pluck('no_spk', 'id_faktur'))
                             ->required()
                             ->reactive()
-                            ->afterStateUpdated(function ($state, callable $set) {
-                                if (blank($state)) {
-                                    $set('id_vendor', null);
-                                }
-                            }),
+                            ->afterStateUpdated(fn($state, callable $set) => $set('total_items', null)),
 
-                        Forms\Components\Grid::make()
+                        Forms\Components\TextInput::make('total_items')
+                            ->label('Jumlah Barang')
+                            ->numeric()
+                            ->minValue(1)
+                            ->required()
+                            ->reactive()
+                            ->afterStateUpdated(function ($state, callable $set) {
+                                if (filled($state)) {
+                                    $items = collect(range(1, $state))->map(fn() => [])->toArray();
+                                    $set('items', $items);
+                                }
+                            })
+                            ->visible(fn($get) => filled($get('id_faktur'))),
+
+                        Forms\Components\Repeater::make('items')
                             ->schema([
                                 Forms\Components\Select::make('id_vendor')
                                     ->label('Nama Vendor')
                                     ->relationship('vendor', 'nama_vendor')
-                                    ->required()
-                                    ->visible(fn ($get) => filled($get('id_faktur'))),
-                                    
+                                    ->required(),
                                 Forms\Components\TextInput::make('nama_barang')
-                                    ->required()
-                                    ->visible(fn ($get) => filled($get('id_faktur'))),
-                                    
+                                    ->required(),
                                 Forms\Components\TextInput::make('banyak_unit')
                                     ->numeric()
-                                    ->required()
-                                    ->visible(fn ($get) => filled($get('id_faktur'))),
-                                    
-                                Forms\Components\TextInput::make('garansi')
-                                    ->numeric()
-                                    ->required()
-                                    ->visible(fn ($get) => filled($get('id_faktur'))),
-                                    
+                                    ->required(),
+                                Forms\Components\DatePicker::make('garansi')
+                                    ->label('Garansi')
+                                    ->required(),
                                 Forms\Components\TextInput::make('lokasi')
+                                    ->required(),
+                                Forms\Components\Select::make('requires_serial_number')
+                                    ->label('Requires Serial Number')
+                                    ->options([
+                                        'yes' => 'Yes',
+                                        'no' => 'No',
+                                    ])
                                     ->required()
-                                    ->visible(fn ($get) => filled($get('id_faktur'))),
-                                    
+                                    ->reactive(),
+                                Forms\Components\TextInput::make('serial_number')
+                                    ->label('Serial Number')
+                                    ->nullable()
+                                    ->visible(fn($get) => $get('requires_serial_number') === 'yes'),
+                                Forms\Components\TextInput::make('harga_jual')
+                                    ->label('Harga Jual')
+                                    ->numeric()
+                                    ->nullable(),
+                                Forms\Components\TextInput::make('harga_beli')
+                                    ->label('Harga Beli')
+                                    ->numeric()
+                                    ->nullable(),
                                 Forms\Components\Select::make('status_list')
                                     ->options([
                                         'Belum dipesan' => 'Belum dipesan',
-                                        'Sudah dipesan' => 'Sudah dipesan', 
+                                        'Sudah dipesan' => 'Sudah dipesan',
                                         'Barang sampai' => 'Barang sampai',
                                         'Barang diserahkan ke user' => 'Barang diserahkan ke user'
                                     ])
-                                    ->required()
-                                    ->visible(fn ($get) => filled($get('id_faktur'))),
-                                    
+                                    ->required(),
                                 Forms\Components\DatePicker::make('jatuh_tempo')
-                                    ->required()
-                                    ->visible(fn ($get) => filled($get('id_faktur'))),
-                            ])->columns(2)
+                                    ->required(),
+                            ])
+                            ->columns(2)
+                            ->visible(fn($get) => filled($get('total_items')))
+                            ->disabled(fn($get) => !filled($get('total_items')))
+                            ->minItems(fn($get) => $get('total_items') ?? 0)
+                            ->maxItems(fn($get) => $get('total_items') ?? 0)
+                            ->defaultItems(0)
+                            ->afterStateUpdated(function ($state, callable $set) {
+                                $set('total_items', count($state));
+                            })
                     ])
             ]);
     }

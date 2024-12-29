@@ -18,8 +18,12 @@ class Isi_Faktur extends Model
         'banyak_unit',
         'garansi',
         'lokasi',
+        'requires_serial_number',
+        'serial_number',
         'status_list',
         'jatuh_tempo',
+        'harga_jual',
+        'harga_beli',
     ];
 
     public function faktur()

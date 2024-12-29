@@ -17,10 +17,14 @@ return new class extends Migration
             $table->unsignedBigInteger('id_vendor');
             $table->string('nama_barang');
             $table->integer('banyak_unit');
-            $table->integer('garansi');
+            $table->date('garansi');
             $table->string('lokasi');
+            $table->enum('requires_serial_number', ['yes', 'no'])->default('no');
+            $table->string('serial_number')->nullable();
             $table->enum('status_list', ['Belum dipesan', 'Sudah dipesan', 'Barang sampai', 'Barang diserahkan ke user']);
             $table->date('jatuh_tempo');
+            $table->decimal('harga_jual', 15, 2)->nullable();
+            $table->decimal('harga_beli', 15, 2)->nullable();
             $table->timestamps();
 
             $table->foreign('id_faktur')->references('id_faktur')->on('fakturs')->onDelete('cascade');
@@ -33,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('isi__fakturs');
+        Schema::dropIfExists('isi_fakturs');
     }
 };

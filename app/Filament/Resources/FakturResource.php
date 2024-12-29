@@ -28,25 +28,52 @@ class FakturResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('no_spk')
                     ->label('No. SPK')
-                    ->required(),
+                    ->required()
+                    ->placeholder('Masukkan No. SPK')
+                    ->maxLength(255)
+                    ->prefixIcon('heroicon-o-document-text'),
+
                 Forms\Components\DatePicker::make('tgl_sk')
-                    ->label('Tanggal SPK')
-                    ->required(),
+                    ->label('Tanggal Terbit SPK')
+                    ->required()
+                    ->placeholder('Pilih Tanggal Terbit SPK')
+                    ->native(false)
+                    ->prefixIcon('heroicon-o-calendar'),
+
                 Forms\Components\TextInput::make('user')
                     ->label('SPK User')
-                    ->required(),
+                    ->required()
+                    ->placeholder('Masukkan SPK User')
+                    ->maxLength(255)
+                    ->prefixIcon('heroicon-o-user'),
+
                 Forms\Components\DatePicker::make('tgl_bast_vendor')
                     ->label('Tanggal BAST Vendor')
-                    ->nullable(),
+                    ->nullable()
+                    ->placeholder('Pilih Tanggal Serah Terima Ke Vendor')
+                    ->native(false)
+                    ->prefixIcon('heroicon-o-calendar'),
+
                 Forms\Components\DatePicker::make('deadline_pekerjaan')
                     ->label('Deadline Pekerjaan')
-                    ->required(),
+                    ->required()
+                    ->placeholder('Pilih Deadline Pekerjaan')
+                    ->native(false)
+                    ->prefixIcon('heroicon-o-clock'),
+
                 Forms\Components\TextInput::make('spk_tj_ke_vendor')
-                    ->label('SPK TJ ke Vendor')
-                    ->nullable(),
+                    ->label('No. SPK TJ ke Vendor')
+                    ->required()
+                    ->placeholder('Masukkan SPK TJ ke Vendor')
+                    ->maxLength(255)
+                    ->prefixIcon('heroicon-o-document'),
+
                 Forms\Components\TextInput::make('nomor_folder_pekerjaan')
                     ->label('Nomor Folder Pekerjaan')
-                    ->nullable(),
+                    ->required()
+                    ->placeholder('Masukkan Nomor Folder Pekerjaan')
+                    ->maxLength(255)
+                    ->prefixIcon('heroicon-o-folder'),
             ]);
     }
 

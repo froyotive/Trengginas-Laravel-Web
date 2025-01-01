@@ -3,38 +3,48 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ListVendorResource\Pages;
-use App\Filament\Resources\ListVendorResource\RelationManagers;
-use App\Models\ListVendor;
+use App\Models\List_Vendor;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Models\List_Vendor;
 
 class ListVendorResource extends Resource
 {
     protected static ?string $model = List_Vendor::class;
-    protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
-    
-    protected static ?string $navigationLabel = 'List Vendor';
-    
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static ?string $navigationLabel = 'Vendor';
     protected static ?string $modelLabel = 'Vendor';
-    protected static ?string $pluralModelLabel = 'Vendor';
-
-    protected static ?int $navigationSort = 3;
-
+    protected static ?string $pluralModelLabel = 'Vendors';
     protected static ?string $navigationGroup = 'Manajemen Faktur';
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nama_vendor')->label('Nama Vendor'),
-                Forms\Components\TextInput::make('alamat_vendor')->label('Alamat Vendor'),
-                Forms\Components\TextInput::make('no_vendor')->label('No. Vendor'),
+                Forms\Components\TextInput::make('nama_vendor')
+                    ->label('Nama Vendor')
+                    ->required()
+                    ->placeholder('Masukkan Nama Vendor')
+                    ->maxLength(255)
+                    ->prefixIcon('heroicon-o-user'),
+
+                Forms\Components\TextInput::make('alamat_vendor')
+                    ->label('Alamat Vendor')
+                    ->required()
+                    ->placeholder('Masukkan Alamat Vendor')
+                    ->maxLength(255)
+                    ->prefixIcon('heroicon-o-map'),
+
+                Forms\Components\TextInput::make('no_vendor')
+                    ->label('Nomor Telepon Vendor')
+                    ->required()
+                    ->placeholder('Masukkan Nomor Telepon Vendor')
+                    ->maxLength(15)
+                    ->prefixIcon('heroicon-o-phone'),
             ]);
     }
 
@@ -42,34 +52,53 @@ class ListVendorResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nama_vendor')->label('Nama Vendor'),
+                Tables\Columns\TextColumn::make('nama_vendor')
+                    ->label('Nama Vendor')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('alamat_vendor')
+                    ->label('Alamat Vendor')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('no_vendor')
+                    ->label('Nomor Telepon Vendor')
+                    ->sortable()
+                    ->searchable(),
             ])
             ->filters([
-                //
+                // Add any filters you need here
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->button()
+                    ->label('Baca')
+                    ->color('info'),
+                Tables\Actions\EditAction::make()
+                    ->button()
+                    ->label('Ubah')
+                    ->color('warning'),
+                Tables\Actions\DeleteAction::make()
+                    ->button()
+                    ->label('Hapus')
+                    ->color('danger')
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+            ->bulkActions([]);
     }
 
     public static function getRelations(): array
     {
         return [
-            //
+            // Define your relations here
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListListVendors::route('/'),
-            'create' => Pages\CreateListVendor::route('/create'),
-            'edit' => Pages\EditListVendor::route('/{record}/edit'),
+            'index' => Pages\ListVendors::route('/'),
+            'create' => Pages\CreateVendor::route('/create'),
+            'view' => Pages\ViewVendor::route('/{record}'),
+            'edit' => Pages\EditVendor::route('/{record}/edit'),
         ];
     }
 }

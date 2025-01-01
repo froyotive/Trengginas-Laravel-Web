@@ -5,17 +5,18 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\IsiFakturResource\Pages;
 use App\Models\Isi_Faktur;
 use App\Models\Faktur;
+use App\Models\List_Vendor;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Validation\ValidationException;
 
 class IsiFakturResource extends Resource
 {
     protected static ?string $model = Isi_Faktur::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
     protected static ?string $navigationLabel = 'Isi Faktur';
     protected static ?string $modelLabel = 'Isi Faktur';
@@ -34,7 +35,16 @@ class IsiFakturResource extends Resource
                             ->options(Faktur::pluck('no_spk', 'id_faktur'))
                             ->required()
                             ->reactive()
-                            ->afterStateUpdated(fn($state, callable $set) => $set('total_items', null)),
+                            ->afterStateUpdated(fn($state, callable $set) => $set('total_items', null))
+                            ->extraAttributes(['class' => 'form-control'])
+                            ->prefixIcon('heroicon-o-document-text'),
+
+                        Forms\Components\Select::make('id_vendor')
+                            ->label('Nama Vendor')
+                            ->options(List_Vendor::pluck('nama_vendor', 'id_vendor'))
+                            ->required()
+                            ->extraAttributes(['class' => 'form-control'])
+                            ->prefixIcon('heroicon-o-user-group'),
 
                         Forms\Components\TextInput::make('total_items')
                             ->label('Jumlah Barang')
@@ -48,24 +58,37 @@ class IsiFakturResource extends Resource
                                     $set('items', $items);
                                 }
                             })
-                            ->visible(fn($get) => filled($get('id_faktur'))),
+                            ->visible(fn($get) => filled($get('id_faktur')))
+                            ->extraAttributes(['class' => 'form-control'])
+                            ->prefixIcon('heroicon-o-hashtag'),
 
                         Forms\Components\Repeater::make('items')
                             ->schema([
-                                Forms\Components\Select::make('id_vendor')
-                                    ->label('Nama Vendor')
-                                    ->relationship('vendor', 'nama_vendor')
-                                    ->required(),
                                 Forms\Components\TextInput::make('nama_barang')
-                                    ->required(),
+                                    ->label('Nama Barang')
+                                    ->required()
+                                    ->extraAttributes(['class' => 'form-control'])
+                                    ->prefixIcon('heroicon-o-cube'),
+
                                 Forms\Components\TextInput::make('banyak_unit')
+                                    ->label('Banyak Unit')
                                     ->numeric()
-                                    ->required(),
+                                    ->required()
+                                    ->extraAttributes(['class' => 'form-control'])
+                                    ->prefixIcon('heroicon-o-hashtag'),
+
                                 Forms\Components\DatePicker::make('garansi')
                                     ->label('Garansi')
-                                    ->required(),
+                                    ->required()
+                                    ->extraAttributes(['class' => 'form-control bootstrap-datepicker'])
+                                    ->prefixIcon('heroicon-o-calendar'),
+
                                 Forms\Components\TextInput::make('lokasi')
-                                    ->required(),
+                                    ->label('Lokasi')
+                                    ->required()
+                                    ->extraAttributes(['class' => 'form-control'])
+                                    ->prefixIcon('heroicon-o-map'),
+
                                 Forms\Components\Select::make('requires_serial_number')
                                     ->label('Requires Serial Number')
                                     ->options([
@@ -73,29 +96,48 @@ class IsiFakturResource extends Resource
                                         'no' => 'No',
                                     ])
                                     ->required()
-                                    ->reactive(),
+                                    ->reactive()
+                                    ->extraAttributes(['class' => 'form-control'])
+                                    ->prefixIcon('heroicon-o-check-circle'),
+
                                 Forms\Components\TextInput::make('serial_number')
                                     ->label('Serial Number')
                                     ->nullable()
-                                    ->visible(fn($get) => $get('requires_serial_number') === 'yes'),
+                                    ->visible(fn($get) => $get('requires_serial_number') === 'yes')
+                                    ->extraAttributes(['class' => 'form-control'])
+                                    ->prefixIcon('heroicon-o-barcode'),
+
                                 Forms\Components\TextInput::make('harga_jual')
                                     ->label('Harga Jual')
                                     ->numeric()
-                                    ->nullable(),
+                                    ->nullable()
+                                    ->extraAttributes(['class' => 'form-control'])
+                                    ->prefixIcon('heroicon-o-currency-dollar'),
+
                                 Forms\Components\TextInput::make('harga_beli')
                                     ->label('Harga Beli')
                                     ->numeric()
-                                    ->nullable(),
+                                    ->nullable()
+                                    ->extraAttributes(['class' => 'form-control'])
+                                    ->prefixIcon('heroicon-o-currency-dollar'),
+
                                 Forms\Components\Select::make('status_list')
+                                    ->label('Status')
                                     ->options([
                                         'Belum dipesan' => 'Belum dipesan',
                                         'Sudah dipesan' => 'Sudah dipesan',
                                         'Barang sampai' => 'Barang sampai',
                                         'Barang diserahkan ke user' => 'Barang diserahkan ke user'
                                     ])
-                                    ->required(),
+                                    ->required()
+                                    ->extraAttributes(['class' => 'form-control'])
+                                    ->prefixIcon('heroicon-o-check-circle'),
+
                                 Forms\Components\DatePicker::make('jatuh_tempo')
-                                    ->required(),
+                                    ->label('Jatuh Tempo')
+                                    ->required()
+                                    ->extraAttributes(['class' => 'form-control bootstrap-datepicker'])
+                                    ->prefixIcon('heroicon-o-calendar'),
                             ])
                             ->columns(2)
                             ->visible(fn($get) => filled($get('total_items')))
@@ -107,7 +149,8 @@ class IsiFakturResource extends Resource
                                 $set('total_items', count($state));
                             })
                     ])
-            ]);
+            ])
+            ->extraAttributes(['class' => 'form-bootstrap-datepicker']);
     }
 
     public static function table(Table $table): Table
@@ -129,17 +172,30 @@ class IsiFakturResource extends Resource
                     ->date(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('id_faktur')
-                    ->label('Filter by SPK')
-                    ->relationship('faktur', 'no_spk')
+                // Add any filters you need here
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->button()
+                    ->label('Baca')
+                    ->color('info'),
+                Tables\Actions\EditAction::make()
+                    ->button()
+                    ->label('Ubah')
+                    ->color('warning'),
+                Tables\Actions\DeleteAction::make()
+                    ->button()
+                    ->label('Hapus')
+                    ->color('danger')
             ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
-            ]);
+            ->bulkActions([]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            // Define your relations here
+        ];
     }
 
     public static function getPages(): array
@@ -147,6 +203,7 @@ class IsiFakturResource extends Resource
         return [
             'index' => Pages\ListIsiFakturs::route('/'),
             'create' => Pages\CreateIsiFaktur::route('/create'),
+            'view' => Pages\ViewIsiFaktur::route('/{record}'),
             'edit' => Pages\EditIsiFaktur::route('/{record}/edit'),
         ];
     }

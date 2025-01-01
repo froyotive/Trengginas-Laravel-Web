@@ -38,7 +38,8 @@ class FakturResource extends Resource
                     ->required()
                     ->placeholder('Pilih Tanggal Terbit SPK')
                     ->native(false)
-                    ->prefixIcon('heroicon-o-calendar'),
+                    ->prefixIcon('heroicon-o-calendar')
+                    ->extraAttributes(['class' => 'bootstrap-datepicker']),
 
                 Forms\Components\TextInput::make('user')
                     ->label('SPK User')
@@ -50,19 +51,21 @@ class FakturResource extends Resource
                 Forms\Components\DatePicker::make('tgl_bast_vendor')
                     ->label('Tanggal BAST Vendor')
                     ->nullable()
-                    ->placeholder('Pilih Tanggal Serah Terima Ke Vendor')
+                    ->placeholder('Pilih Tanggal BAST Vendor (Opsional)')
                     ->native(false)
-                    ->prefixIcon('heroicon-o-calendar'),
+                    ->prefixIcon('heroicon-o-calendar')
+                    ->extraAttributes(['class' => 'bootstrap-datepicker']),
 
                 Forms\Components\DatePicker::make('deadline_pekerjaan')
                     ->label('Deadline Pekerjaan')
                     ->required()
                     ->placeholder('Pilih Deadline Pekerjaan')
                     ->native(false)
-                    ->prefixIcon('heroicon-o-clock'),
+                    ->prefixIcon('heroicon-o-clock')
+                    ->extraAttributes(['class' => 'bootstrap-datepicker']),
 
                 Forms\Components\TextInput::make('spk_tj_ke_vendor')
-                    ->label('No. SPK TJ ke Vendor')
+                    ->label('SPK TJ ke Vendor')
                     ->required()
                     ->placeholder('Masukkan SPK TJ ke Vendor')
                     ->maxLength(255)
@@ -74,7 +77,8 @@ class FakturResource extends Resource
                     ->placeholder('Masukkan Nomor Folder Pekerjaan')
                     ->maxLength(255)
                     ->prefixIcon('heroicon-o-folder'),
-            ]);
+            ])
+            ->extraAttributes(['class' => 'form-bootstrap-datepicker']);
     }
 
     public static function table(Table $table): Table
@@ -129,15 +133,21 @@ class FakturResource extends Resource
                         }
 
                         return implode(' ', $parts) . ' lagi';
-                    })
-                    ->alignCenter(),
+                    }),
             ])
             ->defaultSort('created_at', 'desc')
+            ->filters([
+                // Add any filters you need here
+            ])
             ->actions([
                 Tables\Actions\ViewAction::make()
                     ->button()
                     ->label('Baca')
                     ->color('info'),
+                Tables\Actions\EditAction::make()
+                    ->button()
+                    ->label('Ubah')
+                    ->color('warning'),
                 Tables\Actions\DeleteAction::make()
                     ->button()
                     ->label('Hapus')

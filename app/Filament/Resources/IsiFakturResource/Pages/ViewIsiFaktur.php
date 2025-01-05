@@ -7,6 +7,11 @@ use Filament\Forms;
 use Filament\Resources\Pages\ViewRecord;
 use App\Models\Faktur;
 use App\Models\List_Vendor;
+use Filament\Infolists\Infolist;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\TextEntry\TextEntrySize;
+use Filament\Support\Enums\FontWeight;
 
 class ViewIsiFaktur extends ViewRecord
 {
@@ -14,79 +19,73 @@ class ViewIsiFaktur extends ViewRecord
 
     protected static ?string $title = 'Melihat Data Isi Faktur';
 
-    protected function getFormSchema(): array
+    public function infolist(Infolist $infolist): Infolist
     {
-        return [
-            Forms\Components\Section::make('Informasi Faktur')
+        return $infolist
+            ->schema([
+                Section::make('Informasi Isi Faktur')
+                ->description('Detail lengkap data isi faktur')
+                ->icon('heroicon-o-document-text')
                 ->schema([
-                    Forms\Components\TextInput::make('faktur.no_spk')
-                        ->label('No SPK')
-                        ->disabled()
-                        ->prefixIcon('heroicon-o-document-text'),
+                    TextEntry::make('faktur.no_spk')
+                        ->label('Nomor Faktur')
+                        ->icon('heroicon-o-document-text')
+                        ->size(TextEntrySize::Large)
+                        ->weight(FontWeight::Bold)
+                        ->copyable(),
 
-                    Forms\Components\TextInput::make('nama_barang')
+                    TextEntry::make('nama_barang')  
                         ->label('Nama Barang')
-                        ->disabled()
-                        ->prefixIcon('heroicon-o-cube'),
+                        ->icon('heroicon-o-cube')
+                        ->copyable(),
 
-                    Forms\Components\TextInput::make('banyak_unit')
+                    TextEntry::make('banyak_unit')
                         ->label('Banyak Unit')
-                        ->disabled()
-                        ->prefixIcon('heroicon-o-hashtag'),
+                        ->icon('heroicon-o-hashtag')
+                        ->copyable(),    
 
-                    Forms\Components\DatePicker::make('garansi')
+                    TextEntry::make('garansi')
                         ->label('Garansi')
-                        ->disabled()
-                        ->prefixIcon('heroicon-o-calendar'),
+                        ->icon('heroicon-o-calendar')
+                        ->copyable(),
 
-                    Forms\Components\TextInput::make('lokasi')
+                    TextEntry::make('lokasi')
                         ->label('Lokasi')
-                        ->disabled()
-                        ->prefixIcon('heroicon-o-map'),
+                        ->icon('heroicon-o-map')
+                        ->copyable(),
 
-                    Forms\Components\Select::make('id_vendor')
-                    ->label('Nama Vendor')
-                    ->options(function ($record) {
-                        if ($record) {
-                            return [$record->id_vendor => $record->vendor->nama_vendor];
-                        }
-                        return [];
-                    })
-                    ->disabled()
-                    ->prefixIcon('heroicon-o-user-group'),
+                        TextEntry::make('vendor.nama_vendor')
+                        ->label('Nama Vendor')
+                        ->icon('heroicon-o-user-group')
+                        ->copyable(),    
 
-                    Forms\Components\TextInput::make('serial_number')
+                    TextEntry::make('serial_number')
                         ->label('Serial Number')
-                        ->disabled()
-                        ->visible(fn($record) => $record->requires_serial_number === 'yes')
-                        ->prefixIcon('heroicon-o-tag'),
-
-                    Forms\Components\TextInput::make('harga_jual')
+                        ->icon('heroicon-o-identification')
+                        ->copyable(),
+                    
+                    TextEntry::make('harga_jual')
                         ->label('Harga Jual')
-                        ->disabled()
-                        ->prefixIcon('heroicon-o-currency-dollar'),
+                        ->icon('heroicon-o-currency-dollar')
+                        ->copyable(),
 
-                    Forms\Components\TextInput::make('harga_beli')
+                    TextEntry::make('harga_beli')
                         ->label('Harga Beli')
-                        ->disabled()
-                        ->prefixIcon('heroicon-o-currency-dollar'),
+                        ->icon('heroicon-o-currency-dollar')
+                        ->copyable(),
 
-                    Forms\Components\TextInput::make('status_list')
-                        ->label('Status')
-                        ->disabled()
-                        ->prefixIcon('heroicon-o-check-circle'),
-
-                    Forms\Components\DatePicker::make('jatuh_tempo')
+                    TextEntry::make('status_list')
+                        ->label('Status List')
+                        ->icon('heroicon-o-check-circle')
+                        ->copyable(),
+                    
+                    TextEntry::make('jatuh_tempo')
                         ->label('Jatuh Tempo')
-                        ->disabled()
-                        ->prefixIcon('heroicon-o-calendar'),
-
-                    Forms\Components\TextInput::make('requires_serial_number')
-                        ->label('Requires Serial Number')
-                        ->disabled()
-                        ->prefixIcon('heroicon-o-check-circle'),
+                        ->icon('heroicon-o-calendar')
+                        ->copyable(),
                 ])
-                ->columns(2)
-        ];
+            ]);
     }
+
+    
 }

@@ -18,8 +18,8 @@ class ListVendorResource extends Resource
     protected static ?string $navigationLabel = 'Vendor';
     protected static ?string $modelLabel = 'Vendor';
     protected static ?string $pluralModelLabel = 'Vendors';
-    protected static ?string $navigationGroup = 'Manajemen Faktur';
-    protected static ?int $navigationSort = 3;
+    protected static ?string $navigationGroup = 'Manajemen Vendor';
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {
@@ -43,9 +43,15 @@ class ListVendorResource extends Resource
                     ->label('Nomor Telepon Vendor')
                     ->required()
                     ->placeholder('Masukkan Nomor Telepon Vendor')
-                    ->maxLength(15)
-                    ->prefixIcon('heroicon-o-phone'),
-            ]);
+                    ->maxLength(14)
+                    ->prefixIcon('heroicon-o-phone')
+                    ->extraAlpineAttributes([
+                        'x-data' => '{}',
+                        'x-init' => 'if (!event.target.value.startsWith("+62")) { event.target.value = "+62" + event.target.value }',
+                        'x-on:input' => 'if (!event.target.value.startsWith("+62")) { event.target.value = "+62" + event.target.value }',
+                    ]),
+            ])
+            ->extraAttributes(['class' => 'form-bootstrap-datepicker']);
     }
 
     public static function table(Table $table): Table

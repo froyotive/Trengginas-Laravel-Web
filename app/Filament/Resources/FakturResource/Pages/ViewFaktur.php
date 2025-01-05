@@ -24,10 +24,7 @@ class ViewFaktur extends ViewRecord
             Actions\Action::make('back')
                 ->label('Kembali ke halaman utama')
                 ->url(FakturResource::getUrl('index'))
-                ->color('info'),
-            Actions\EditAction::make('edit')
-                ->label('Ubah data')
-                ->color('warning'),
+                ->color('info')
         ];
     }
 }

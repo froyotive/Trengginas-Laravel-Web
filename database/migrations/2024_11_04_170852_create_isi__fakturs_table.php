@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('isi_fakturs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_faktur');
-            $table->unsignedBigInteger('id_vendor');
+            $table->string('nama_vendor');
             $table->string('nama_barang');
             $table->integer('banyak_unit');
             $table->date('garansi');
@@ -23,12 +23,11 @@ return new class extends Migration
             $table->string('serial_number')->nullable();
             $table->enum('status_list', ['Belum dipesan', 'Sudah dipesan', 'Barang sampai', 'Barang diserahkan ke user']);
             $table->date('jatuh_tempo');
-            $table->decimal('harga_jual', 15, 2)->nullable();
-            $table->decimal('harga_beli', 15, 2)->nullable();
+            $table->float('harga_jual', 15, 2)->nullable();
+            $table->float('harga_beli', 15, 2)->nullable();
             $table->timestamps();
 
             $table->foreign('id_faktur')->references('id_faktur')->on('fakturs')->onDelete('cascade');
-            $table->foreign('id_vendor')->references('id_vendor')->on('list__vendors')->onDelete('cascade');
         });
     }
 

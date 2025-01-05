@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Isi_Faktur extends Model
 {
@@ -13,7 +14,7 @@ class Isi_Faktur extends Model
 
     protected $fillable = [
         'id_faktur',
-        'id_vendor',
+        'nama_vendor',
         'nama_barang',
         'banyak_unit',
         'garansi',
@@ -31,8 +32,8 @@ class Isi_Faktur extends Model
         return $this->belongsTo(Faktur::class, 'id_faktur');
     }
 
-    public function vendor()
+    public function setGaransiAttribute($value)
     {
-        return $this->belongsTo(List_Vendor::class, 'id_vendor');
+        $this->attributes['garansi'] = Carbon::parse($value)->addYear();
     }
 }

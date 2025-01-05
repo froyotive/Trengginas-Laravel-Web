@@ -124,14 +124,6 @@ class FakturResource extends Resource
                         if ($diff->d > 0) {
                             $parts[] = $diff->d . ' hari';
                         }
-                        if (empty($parts)) {
-                            if ($diff->h > 0) {
-                                $parts[] = $diff->h . ' jam';
-                            }
-                            if ($diff->i > 0) {
-                                $parts[] = $diff->i . ' menit';
-                            }
-                        }
 
                         return implode(' ', $parts) . ' lagi';
                     }),

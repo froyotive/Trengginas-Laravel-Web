@@ -17,8 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('id_vendor');
             $table->string('nama_barang');
             $table->integer('banyak_unit');
-            $table->date('garansi');
-            $table->string('lokasi');
+            $table->date('garansi')->nullable();
+            $table->string('lokasi')->nullable();
             $table->enum('requires_serial_number', ['yes', 'no'])->default('no');
             $table->string('serial_number')->nullable();
             $table->enum('status_list', ['Belum dipesan', 'Sudah dipesan', 'Barang sampai', 'Barang diserahkan ke user']);

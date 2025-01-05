@@ -20,6 +20,7 @@ class EditFaktur extends EditRecord
     {
         return [];
     }
+    
 
     protected function afterSave(): void
     {

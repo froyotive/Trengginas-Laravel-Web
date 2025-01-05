@@ -17,36 +17,6 @@ class ViewVendor extends ViewRecord
 
     protected static ?string $title = 'Melihat Data Vendor';
 
-    public function infolist(Infolist $infolist): Infolist
-    {
-        return $infolist
-            ->schema([
-                Section::make('Informasi Vendor')
-                    ->description('Detail lengkap data vendor')
-                    ->icon('heroicon-o-user-group')
-                    ->schema([
-                        TextEntry::make('nama_vendor')
-                            ->label('Nama Vendor')
-                            ->icon('heroicon-o-user')
-                            ->size(TextEntrySize::Large)
-                            ->weight(FontWeight::Bold)
-                            ->copyable(),
-
-                        TextEntry::make('alamat_vendor')
-                            ->label('Alamat Vendor')
-                            ->icon('heroicon-o-map-pin')
-                            ->copyable(),
-
-                        TextEntry::make('no_vendor')
-                            ->label('Nomor Telepon')
-                            ->icon('heroicon-o-phone')
-                            ->copyable(),
-                    ])
-                    ->columns(1)
-                    ->columnSpan(2)
-            ]);
-    }
-
     protected function getActions(): array
     {
         return [

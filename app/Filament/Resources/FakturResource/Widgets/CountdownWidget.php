@@ -20,6 +20,6 @@ class CountdownWidget extends Widget
     {
         $deadline = Carbon::parse($this->record->deadline_pekerjaan);
         $now = Carbon::now();
-        return $deadline->diffInDays($now) . ' days remaining';
+        return $deadline->diffInDays($now) . ' Hari Lagi';
     }
 }

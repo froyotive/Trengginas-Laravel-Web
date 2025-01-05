@@ -27,6 +27,7 @@ class ViewFaktur extends ViewRecord
                 ->label('Kembali ke halaman utama')
                 ->url(FakturResource::getUrl('index'))
                 ->color('info')
+                ->icon('heroicon-o-arrow-left')
         ];
     }
 }

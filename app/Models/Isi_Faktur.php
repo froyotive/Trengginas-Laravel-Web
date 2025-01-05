@@ -34,6 +34,10 @@ class Isi_Faktur extends Model
 
     public function setGaransiAttribute($value)
     {
-        $this->attributes['garansi'] = Carbon::parse($value)->addYear();
+        if (!$this->exists) {
+            $this->attributes['garansi'] = Carbon::parse($value)->addYear();
+        } else {
+            $this->attributes['garansi'] = $value;
+    }
     }
 }

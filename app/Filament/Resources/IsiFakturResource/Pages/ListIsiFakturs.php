@@ -12,6 +12,8 @@ class ListIsiFakturs extends ListRecords
 {
     protected static string $resource = IsiFakturResource::class;
 
+    protected static ?string $title = 'Melihat List Isi Faktur';
+
     protected function getHeaderActions(): array
     {
         return [

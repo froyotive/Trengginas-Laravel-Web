@@ -14,7 +14,7 @@ class Isi_Faktur extends Model
 
     protected $fillable = [
         'id_faktur',
-        'nama_vendor',
+        'id_vendor',
         'nama_barang',
         'banyak_unit',
         'garansi',

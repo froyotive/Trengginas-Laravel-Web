@@ -11,6 +11,8 @@ class ViewFaktur extends ViewRecord
 {
     protected static string $resource = FakturResource::class;
 
+    protected static ?string $title = 'Melihat Data Faktur';
+
     protected function getHeaderWidgets(): array
     {
         return [

@@ -10,6 +10,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Notifications\Notification;
 
 class ListVendorResource extends Resource
 {
@@ -87,9 +88,16 @@ class ListVendorResource extends Resource
                     ->button()
                     ->label('Hapus')
                     ->color('danger')
+                    ->successNotification(
+                        Notification::make()
+                            ->success()
+                            ->title('Berhasil menghapus data Vendor')
+                    )
+                    ->successNotificationTitle(null)
             ])
             ->bulkActions([]);
     }
+
 
     public static function getRelations(): array
     {

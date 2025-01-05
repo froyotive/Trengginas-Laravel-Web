@@ -11,6 +11,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Filament\Notifications\Notification;
 
 class FakturResource extends Resource
 {
@@ -51,7 +52,7 @@ class FakturResource extends Resource
                 Forms\Components\DatePicker::make('tgl_bast_vendor')
                     ->label('Tanggal BAST Vendor')
                     ->nullable()
-                    ->placeholder('Pilih Tanggal BAST Vendor (Opsional)')
+                    ->placeholder('Pilih Tanggal Serah Terima')
                     ->native(false)
                     ->prefixIcon('heroicon-o-calendar')
                     ->extraAttributes(['class' => 'bootstrap-datepicker']),
@@ -137,7 +138,6 @@ class FakturResource extends Resource
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([
-                // Add any filters you need here
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()
@@ -152,6 +152,12 @@ class FakturResource extends Resource
                     ->button()
                     ->label('Hapus')
                     ->color('danger')
+                    ->successNotification(
+                        Notification::make()
+                            ->success()
+                            ->title('Berhasil menghapus data faktur')
+                    )
+                    ->successNotificationTitle(null)
             ])
             ->bulkActions([]);
     }
@@ -159,7 +165,6 @@ class FakturResource extends Resource
     public static function getRelations(): array
     {
         return [
-            // Define your relations here
         ];
     }
 

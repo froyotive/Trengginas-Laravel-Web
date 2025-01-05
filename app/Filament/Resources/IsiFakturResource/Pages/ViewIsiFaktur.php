@@ -12,6 +12,8 @@ class ViewIsiFaktur extends ViewRecord
 {
     protected static string $resource = IsiFakturResource::class;
 
+    protected static ?string $title = 'Melihat Data Isi Faktur';
+
     protected function getFormSchema(): array
     {
         return [
@@ -42,10 +44,16 @@ class ViewIsiFaktur extends ViewRecord
                         ->disabled()
                         ->prefixIcon('heroicon-o-map'),
 
-                    Forms\Components\TextInput::make('nama_vendor')
-                        ->label('Nama Vendor')
-                        ->disabled()
-                        ->prefixIcon('heroicon-o-user-group'),
+                    Forms\Components\Select::make('id_vendor')
+                    ->label('Nama Vendor')
+                    ->options(function ($record) {
+                        if ($record) {
+                            return [$record->id_vendor => $record->vendor->nama_vendor];
+                        }
+                        return [];
+                    })
+                    ->disabled()
+                    ->prefixIcon('heroicon-o-user-group'),
 
                     Forms\Components\TextInput::make('serial_number')
                         ->label('Serial Number')

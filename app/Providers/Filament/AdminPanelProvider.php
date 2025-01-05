@@ -17,7 +17,12 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use App\Filament\Resources\FakturResource\Widgets\TotalSpkByFakturWidget;
+use App\Filament\Widgets\TotalBarangByStatusWidget;
+use App\Filament\Widgets\MonthlyLettersChart;
+use App\Filament\Resources\FakturResource\Widgets\TotalStatsWidget;
+use App\Filament\Widgets\LatestItemsTableWidget;
+use App\Filament\Widgets\FinancialOverviewWidget;
+
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -40,7 +45,12 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
-                TotalSpkByFakturWidget::class,
+                TotalStatsWidget::class,
+                FinancialOverviewWidget::class,
+                TotalBarangByStatusWidget::class,
+                MonthlyLettersChart::class,
+                LatestItemsTableWidget::class,
+                
             ])
             ->middleware([
                 EncryptCookies::class,

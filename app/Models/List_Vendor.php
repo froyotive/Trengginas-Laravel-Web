@@ -20,4 +20,5 @@ class List_Vendor extends Model
     {
         return $this->hasMany(Isi_Faktur::class, 'id_vendor');
     }
+
 }

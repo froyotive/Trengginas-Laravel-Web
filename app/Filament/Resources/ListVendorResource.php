@@ -40,7 +40,7 @@ class ListVendorResource extends Resource
                     ->maxLength(255)
                     ->prefixIcon('heroicon-o-map'),
 
-                    Forms\Components\TextInput::make('no_vendor')
+                Forms\Components\TextInput::make('no_vendor')
                     ->label('Nomor Telepon Vendor')
                     ->required()
                     ->placeholder('Masukkan Nomor Telepon Vendor')
@@ -51,7 +51,7 @@ class ListVendorResource extends Resource
                     ->beforeStateDehydrated(function ($state) {
                         return '+62' . $state;
                     })
-                    ->dehydrateStateUsing(fn ($state) => '+62' . ltrim($state, '+62'))
+                    ->dehydrateStateUsing(fn($state) => '+62' . ltrim($state, '+62'))
                     ->afterStateHydrated(function ($component, $state) {
                         if (str_starts_with($state, '+62')) {
                             $component->state(substr($state, 3));
@@ -94,12 +94,30 @@ class ListVendorResource extends Resource
                     ->button()
                     ->label('Hapus')
                     ->color('danger')
-                    ->successNotification(
+                    ->modalHeading('Konfirmasi Penghapusan')
+                    ->modalDescription('Apakah Anda yakin ingin menghapus vendor ini? Tindakan ini tidak dapat dibatalkan.')
+                    ->modalSubmitActionLabel('Ya, Hapus')
+                    ->modalCancelActionLabel('Batal')
+                    ->requiresConfirmation()
+                    ->action(function ($record) {
+                        if ($record->isi_fakturs()->exists()) {
+                            Notification::make()
+                                ->danger()
+                                ->title('Vendor tidak dapat dihapus')
+                                ->body('Vendor ini masih digunakan dalam isi faktur.')
+                                ->persistent()
+                                ->send();
+
+                            return false;
+                        }
+
+                        $record->delete();
+
                         Notification::make()
                             ->success()
-                            ->title('Berhasil menghapus data Vendor')
-                    )
-                    ->successNotificationTitle(null)
+                            ->title('Vendor berhasil dihapus')
+                            ->send();
+                    }),
             ])
             ->bulkActions([]);
     }

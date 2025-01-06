@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Invoice;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,15 +14,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('inventory',['invoices' => Invoice::latest()->get()]);
-})->name('inventory');
-
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    return redirect('/admin/login');
 });

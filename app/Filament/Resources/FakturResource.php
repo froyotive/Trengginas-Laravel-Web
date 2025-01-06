@@ -68,7 +68,7 @@ class FakturResource extends Resource
                 Forms\Components\TextInput::make('spk_tj_ke_vendor')
                     ->label('SPK TJ ke Vendor')
                     ->required()
-                    ->placeholder('Masukkan SPK TJ ke Vendor')
+                    ->placeholder('Masukkan No SPK TJ ke Vendor')
                     ->maxLength(255)
                     ->prefixIcon('heroicon-o-document'),
 

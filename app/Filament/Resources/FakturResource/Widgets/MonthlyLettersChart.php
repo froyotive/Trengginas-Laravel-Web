@@ -11,7 +11,7 @@ class MonthlyLettersChart extends ChartWidget
 {
     protected static ?string $heading = 'Grafik Surat Per Bulan';
     protected static ?int $sort = 3;
-    protected int|string|array $columnSpan = 'full';    
+    protected int|string|array $columnSpan = 'full';
     public ?string $filter = 'all';
 
     protected function getFilters(): ?array
@@ -34,40 +34,53 @@ class MonthlyLettersChart extends ChartWidget
     }
 
     protected function getData(): array
-    {
+{
+    if ($this->filter === 'all') {
         $query = Faktur::select(
-            DB::raw('DATE(created_at) as date'),
+            DB::raw('MONTH(tgl_sk) as month'),
             DB::raw('COUNT(*) as count')
-        );
-
-        if ($this->filter !== 'all') {
-            $query->whereMonth('created_at', $this->filter)
-                  ->whereYear('created_at', date('Y'));
-        }
-
-        $data = $query->groupBy('date')
-                     ->orderBy('date')
-                     ->get();
-
+        )
+        ->whereYear('tgl_sk', date('Y'))
+        ->groupBy('month')
+        ->orderBy('month');
+        
+        $data = $query->get();
+        
+        $dates = $data->pluck('month')->map(function($month) {
+            return Carbon::create()->month($month)->format('F');
+        })->toArray();
+    } else {
+        $query = Faktur::select(
+            DB::raw('DATE(tgl_sk) as date'),
+            DB::raw('COUNT(*) as count')
+        )
+        ->whereMonth('tgl_sk', $this->filter)
+        ->whereYear('tgl_sk', date('Y'))
+        ->groupBy('date')
+        ->orderBy('date');
+        
+        $data = $query->get();
+        
         $dates = $data->pluck('date')->map(function($date) {
             return Carbon::parse($date)->format('d M');
         })->toArray();
-
-        $counts = $data->pluck('count')->toArray();
-
-        return [
-            'datasets' => [
-                [
-                    'label' => 'Total Surat',
-                    'data' => $counts,
-                    'borderColor' => '#FFC107',
-                    'backgroundColor' => '#FFC107',
-                    'tension' => 0.4,
-                ]
-            ],
-            'labels' => $dates,
-        ];
     }
+
+    $counts = $data->pluck('count')->toArray();
+
+    return [
+        'datasets' => [
+            [
+                'label' => 'Total SPK',
+                'data' => $counts,
+                'borderColor' => '#FFC107',
+                'backgroundColor' => '#FFC107',
+                'tension' => 0.4,
+            ]
+        ],
+        'labels' => $dates,
+    ];
+}
 
     protected function getOptions(): array
     {

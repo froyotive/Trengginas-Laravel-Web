@@ -33,6 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->registration()
             ->brandName('PT. Trengginas Jaya')
             ->colors([
                 'primary' => Color::Amber,

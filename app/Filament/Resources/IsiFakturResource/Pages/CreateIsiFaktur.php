@@ -28,8 +28,7 @@ class CreateIsiFaktur extends CreateRecord
                 $data['banyak_unit'] = $item['banyak_unit'];
                 $data['garansi'] = $item['garansi'];
                 $data['lokasi'] = $item['lokasi'];
-                $data['requires_serial_number'] = $item['requires_serial_number'];
-                $data['serial_number'] = $item['serial_number'];
+                $data['serial_number'] = $item['requires_serial_number'] ? ($item['serial_number'] ?? null) : null;
                 $data['harga_jual'] = $item['harga_jual'];
                 $data['harga_beli'] = $item['harga_beli'];
                 $data['status_list'] = $item['status_list'];

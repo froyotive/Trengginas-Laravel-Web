@@ -6,6 +6,8 @@ use App\Filament\Resources\FakturResource;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\Model;
 
 class CreateFaktur extends CreateRecord
 {

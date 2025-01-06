@@ -85,11 +85,17 @@ class IsiFakturResource extends Resource
                         Forms\Components\TextInput::make('harga_jual')
                             ->label('Harga Jual')
                             ->disabled()
+                            ->formatStateUsing(function ($state) {
+                                return 'IDR ' . number_format($state, 0, ',', '.');
+                            })
                             ->prefixIcon('heroicon-o-currency-dollar'),
 
                         Forms\Components\TextInput::make('harga_beli')
                             ->label('Harga Beli')
                             ->disabled()
+                            ->formatStateUsing(function ($state) {
+                                return 'IDR ' . number_format($state, 0, ',', '.');
+                            })
                             ->prefixIcon('heroicon-o-currency-dollar'),
 
                         Forms\Components\TextInput::make('status_list')
@@ -279,20 +285,22 @@ class IsiFakturResource extends Resource
                                     ->prefixIcon('heroicon-o-tag')
                                     ->placeholder('Masukkan serial number...'),
 
-                                Forms\Components\TextInput::make('harga_jual')
+                                    Forms\Components\TextInput::make('harga_jual')
                                     ->label('Harga Jual')
                                     ->numeric()
                                     ->nullable()
                                     ->extraAttributes(['class' => 'form-control'])
+                                    ->prefix('IDR')
                                     ->prefixIcon('heroicon-o-currency-dollar')
                                     ->reactive()
                                     ->placeholder('Masukkan harga jual...'),
-
+                                
                                 Forms\Components\TextInput::make('harga_beli')
                                     ->label('Harga Beli')
                                     ->numeric()
                                     ->nullable()
                                     ->extraAttributes(['class' => 'form-control'])
+                                    ->prefix('IDR')
                                     ->prefixIcon('heroicon-o-currency-dollar')
                                     ->placeholder('Masukkan harga beli...')
                                     ->reactive(),
@@ -334,10 +342,6 @@ class IsiFakturResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('faktur.no_spk')
-                    ->label('No SPK')
-                    ->sortable()
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('nama_barang'),
                 Tables\Columns\TextColumn::make('banyak_unit'),
                 Tables\Columns\TextColumn::make('garansi'),
@@ -351,8 +355,6 @@ class IsiFakturResource extends Resource
                         'Barang diserahkan ke user' => 'success',
                         default => 'secondary',
                     }),
-                Tables\Columns\TextColumn::make('jatuh_tempo')
-                    ->date(),
             ])
             ->filters([
                 SelectFilter::make('id_faktur')
@@ -372,6 +374,7 @@ class IsiFakturResource extends Resource
                 'faktur.no_spk',
             ])
             ->defaultGroup('faktur.no_spk')
+            ->searchable()
             ->actions([
                 Tables\Actions\ViewAction::make()
                     ->button()

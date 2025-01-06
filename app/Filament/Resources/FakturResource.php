@@ -12,6 +12,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Filament\Notifications\Notification;
+use Illuminate\Validation\Rule;
+
+
 
 class FakturResource extends Resource
 {
@@ -28,17 +31,24 @@ class FakturResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('no_spk')
-                    ->label('No. SPK')
-                    ->required()
-                    ->placeholder('Masukkan No. SPK')
-                    ->maxLength(255)
-                    ->prefixIcon('heroicon-o-document-text'),
+                ->label('No. SPK')
+                ->required()
+                ->placeholder('Masukkan No. SPK')
+                ->maxLength(255)
+                ->unique(
+                    table: 'fakturs', 
+                    column: 'no_spk', 
+                    ignoreRecord: true
+                    )
+                    ->validationMessages([
+                        'unique' => 'Nomor SPK sudah terdaftar dalam sistem'
+                    ])
+                ->prefixIcon('heroicon-o-document-text'),
 
                 Forms\Components\DatePicker::make('tgl_sk')
                     ->label('Tanggal Terbit SPK')
                     ->required()
                     ->placeholder('Pilih Tanggal Terbit SPK')
-                    ->native(false)
                     ->prefixIcon('heroicon-o-calendar')
                     ->extraAttributes(['class' => 'bootstrap-datepicker']),
 
@@ -53,7 +63,6 @@ class FakturResource extends Resource
                     ->label('Tanggal BAST Vendor')
                     ->nullable()
                     ->placeholder('Pilih Tanggal Serah Terima')
-                    ->native(false)
                     ->prefixIcon('heroicon-o-calendar')
                     ->extraAttributes(['class' => 'bootstrap-datepicker']),
 
@@ -61,7 +70,6 @@ class FakturResource extends Resource
                     ->label('Deadline Pekerjaan')
                     ->required()
                     ->placeholder('Pilih Deadline Pekerjaan')
-                    ->native(false)
                     ->prefixIcon('heroicon-o-clock')
                     ->extraAttributes(['class' => 'bootstrap-datepicker']),
 
@@ -103,7 +111,8 @@ class FakturResource extends Resource
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('countdown')
-                    ->label('Countdown')
+                    ->label('Info Batas Waktu')
+                    ->badge()
                     ->getStateUsing(function (Model $record) {
                         $deadline = Carbon::parse($record->deadline_pekerjaan);
                         $now = Carbon::now();
@@ -126,11 +135,16 @@ class FakturResource extends Resource
                         }
 
                         return implode(' ', $parts) . ' lagi';
+                    })
+                    ->color(function (Model $record): string {
+                        $deadline = Carbon::parse($record->deadline_pekerjaan);
+                        $now = Carbon::now();
+
+                        return $now->gt($deadline) ? 'danger' : 'success';
                     }),
             ])
             ->defaultSort('created_at', 'desc')
-            ->filters([
-            ])
+            ->filters([])
             ->actions([
                 Tables\Actions\ViewAction::make()
                     ->button()
@@ -156,8 +170,7 @@ class FakturResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-        ];
+        return [];
     }
 
     public static function getPages(): array

@@ -40,17 +40,23 @@ class ListVendorResource extends Resource
                     ->maxLength(255)
                     ->prefixIcon('heroicon-o-map'),
 
-                Forms\Components\TextInput::make('no_vendor')
+                    Forms\Components\TextInput::make('no_vendor')
                     ->label('Nomor Telepon Vendor')
                     ->required()
                     ->placeholder('Masukkan Nomor Telepon Vendor')
                     ->maxLength(14)
                     ->prefixIcon('heroicon-o-phone')
-                    ->extraAlpineAttributes([
-                        'x-data' => '{}',
-                        'x-init' => 'if (!event.target.value.startsWith("+62")) { event.target.value = "+62" + event.target.value }',
-                        'x-on:input' => 'if (!event.target.value.startsWith("+62")) { event.target.value = "+62" + event.target.value }',
-                    ]),
+                    ->prefix('+62')
+                    ->numeric()
+                    ->beforeStateDehydrated(function ($state) {
+                        return '+62' . $state;
+                    })
+                    ->dehydrateStateUsing(fn ($state) => '+62' . ltrim($state, '+62'))
+                    ->afterStateHydrated(function ($component, $state) {
+                        if (str_starts_with($state, '+62')) {
+                            $component->state(substr($state, 3));
+                        }
+                    }),
             ])
             ->extraAttributes(['class' => 'form-bootstrap-datepicker']);
     }
